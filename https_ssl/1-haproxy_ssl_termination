@@ -1,0 +1,21 @@
+global
+    tune.ssl.default-dh-param 2048
+
+defaults
+    mode http
+    timeout client 15s
+    timeout connect 10s
+    timeout server 15s
+    timeout http-request 10s
+
+frontend clickviral-tech-frontend
+    bind *:80
+    bind *:443 ssl crt  /etc/letsencrypt/live/www.jamesjokdutakuei.tech/www.jamesjokdutakuei.tech.pem
+
+    redirect scheme https code 301 if !{ ssl_fc }
+    default_backend clickviral-tech-backend
+
+backend clickviral-tech-backend
+    balance roundrobin
+    server 6187-web-01 54.226.123.79:80 check
+    server 6187-web-02 107.20.102.145:80 check
